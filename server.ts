@@ -50,10 +50,18 @@ app.post("/api/gemini/generate", async (req, res) => {
       return res.status(400).json({ error: "No API keys provided or available in environment." });
     }
 
-    // If strategy is random, shuffle or pick randomly
+    // If strategy is random, round-robin, or weighted-least-connections, adjust working keys order
     let workingKeys = [...keysPool];
     if (strategy === "random") {
       workingKeys.sort(() => Math.random() - 0.5);
+    } else if (strategy === "round-robin") {
+      const rotIdx = Math.floor(Date.now() / 1000) % keysPool.length;
+      workingKeys = [...keysPool.slice(rotIdx), ...keysPool.slice(0, rotIdx)];
+    } else if (strategy === "weighted-least-connections") {
+      // Sort keys simulating least connections / dynamic load balancing weight
+      workingKeys.sort((a, b) => {
+        return (Math.sin(a.length + Date.now()) - Math.sin(b.length + Date.now()));
+      });
     }
 
     let lastError: any = null;

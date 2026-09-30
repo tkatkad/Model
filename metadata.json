@@ -2,5 +2,7 @@
   "name": "AI Studio Free Tier & Multi-Key Rotator Guide",
   "description": "Panduan lengkap Google AI Studio Free Tier, batasan rate limit, serta simulasi dan implementasi Multi-Key Rotator dengan SDK @google/genai.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

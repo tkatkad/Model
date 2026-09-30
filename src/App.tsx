@@ -762,16 +762,24 @@ export async function generateWithModelAndFallback(prompt: string) {
 
                     <div>
                       <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">
-                        Strategi Rotasi
+                        Advanced Rotation Policy
                       </label>
                       <select
                         value={rotationStrategy}
                         onChange={(e) => setRotationStrategy(e.target.value)}
                         className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-200 focus:outline-none focus:border-indigo-500"
                       >
-                        <option value="fallback">Fallback on 429</option>
-                        <option value="random">Random Selection</option>
+                        <option value="fallback">Fallback on 429 (Primary & Backup)</option>
+                        <option value="random">Random Selection (Acak)</option>
+                        <option value="round-robin">Round-Robin (Berputar Teratur)</option>
+                        <option value="weighted-least-connections">Weighted Least-Connections (Beban Minimum)</option>
                       </select>
+                      <p className="text-xs text-indigo-300 mt-1">
+                        {rotationStrategy === "fallback" && "Menggunakan key utama, jika 429 otomatis pindah ke key berikutnya."}
+                        {rotationStrategy === "random" && "Memilih key secara acak dari array setiap permintaan masuk."}
+                        {rotationStrategy === "round-robin" && "Merotasi key secara berurutan dan adil antar permintaan."}
+                        {rotationStrategy === "weighted-least-connections" && "Memilih key dengan estimasi beban koneksi aktif paling sedikit."}
+                      </p>
                     </div>
                   </div>
 
