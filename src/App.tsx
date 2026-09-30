@@ -301,6 +301,38 @@ export async function generateWithModelAndFallback(prompt: string) {
         {/* TAB 0: VISUALISASI KUOTA & PERBANDINGAN MODEL */}
         {activeTab === "visualizer" && (
           <div className="space-y-8 animate-fade-in">
+            {/* >90% Usage Warning Banner */}
+            {(() => {
+              const totalCapacityRPD = simKeysCount * currentModelLimit.rpd;
+              const usagePercentage = Math.round((simDailyRequests / totalCapacityRPD) * 100);
+              if (usagePercentage > 90) {
+                return (
+                  <div className="bg-gradient-to-r from-rose-950/90 via-slate-900 to-rose-950/90 border border-rose-500/50 rounded-2xl p-5 shadow-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-fade-in">
+                    <div className="flex items-center gap-3.5">
+                      <div className="w-11 h-11 rounded-xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 shrink-0 shadow-inner">
+                        <AlertTriangle className="w-6 h-6 animate-pulse" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-rose-200 text-base flex items-center gap-2">
+                          Peringatan Risiko Tinggi Rate Limiting (HTTP 429)
+                        </h4>
+                        <p className="text-xs sm:text-sm text-rose-300 mt-0.5">
+                          Kalkulasi penggunaan harian mencapai <span className="font-extrabold underline">{usagePercentage}%</span> dari kapasitas total ({simDailyRequests.toLocaleString()} / {totalCapacityRPD.toLocaleString()} req). Pertimbangkan menambah jumlah key API atau menurunkan beban permintaan.
+                        </p>
+                      </div>
+                    </div>
+                    <button 
+                      onClick={() => setSimKeysCount(prev => Math.min(6, prev + 1))}
+                      className="px-4 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-semibold text-xs whitespace-nowrap shadow-md shadow-rose-600/30 transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                    >
+                      <Key className="w-3.5 h-3.5" /> Tambah Key Pool (+1)
+                    </button>
+                  </div>
+                );
+              }
+              return null;
+            })()}
+
             {/* Summary Statistics Widget */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               <div className="bg-gradient-to-br from-indigo-950/60 via-slate-900 to-slate-900 border border-indigo-500/30 rounded-2xl p-6 shadow-xl flex items-center justify-between">
